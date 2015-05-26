@@ -32,9 +32,6 @@ Versioning
 
 XeenTools uses `Semantic Versioning`__
 
-.. _SemVer: http://semver.org
-__ SemVer_
-
 All releases with the same *major* version are guaranteed to be backwards
 compatible. Releases that add new features but retain compatibility increment
 the *minor* number. Releases that add no features and don't change
@@ -43,33 +40,37 @@ compatibility increment the *patch* number.
 Major version 0 is not yet production ready and compatibility can bread without
 any notice. At the moment we are not even at version 0.x.x yet.
 
+__ SemVer_
+.. _SemVer: http://semver.org
+
 Progress
 ########
 
 So far the following file formats are supported:
 
-  - [o] ATT sprite files for attack frames.
-  - [o] CC files, containers that hold other files.
-  - [o] CFG configurations for DOS.
-  - [ ] CHR
-  - [o] DAT sprite info files for objects.
-  - [ ] FAC
-  - [ ] FNT
-  - [ ] FWL
-  - [ ] M
-  - [ ] MOB
-  - [o] MON sprite files for idle frames.
-  - [ ] OBJ
-  - [o] PAL palette files.
-  - [ ] PTY
-  - [ ] SKY
-  - [o] sprite files in general
-  - [ ] SRF
-  - [ ] SWL
-  - [ ] TIL
-  - [ ] TXT
-  - [ ] VGA
-  - [ ] VOC
+- [o] ATT sprite files for attack frames.
+- [o] CC files, containers that hold other files.
+- [o] CFG configurations for DOS.
+- [ ] CHR
+- [o] DAT sprite info files for objects.
+- [ ] DRV copy-protection files
+- [ ] FAC
+- [ ] FNT
+- [ ] FWL
+- [ ] M
+- [ ] MOB
+- [o] MON sprite files for idle frames.
+- [ ] OBJ
+- [o] PAL palette files.
+- [ ] PTY
+- [ ] SKY
+- [o] sprite files in general
+- [ ] SRF
+- [ ] SWL
+- [ ] TIL
+- [ ] TXT
+- [ ] VGA
+- [ ] VOC
 
 Git branching model
 ###################
@@ -86,13 +87,13 @@ is no master yet)
 
                                     +--+ [Hotfix]
                                    /    \
-    --[Master]--------------+--\--/------+------------------------------------->
+    --[Master]--------------+--+--/------+------------------------------------->
                            /    \         \
-     [release client] +---/      \         \           +-----+ [aborted release]
+     [release client] +---+      \         \           +-----+ [aborted release]
                      /            \         \         /       \
     --[Develop]-\---/--\------+----+---+-----+----\--/---------+-----+--------->
                  \      \    /        /            \                /
-                  \      +--/--------/ [Feature]    \              /
+                  \      +--/--------+ [Feature]    \              /
                    \                                 \            /
                     +---------------------------------+----------+ [Feature]
 
@@ -112,14 +113,14 @@ is decided upon at this point.
 
 If the release has to be abored the branch is merged back into the development
 branch and deleted. Otherwise it is merged into the *Master* branch. Every
-commit on the master branch is a new release be definition and guaranteed to be
+commit on the master branch is a new release by definition and guaranteed to be
 production-ready. Every release is tagged with the version number. The release
 is then merged back into the development branch.
 
 If a release is broken and needs a hotfix a *Hotfix* branch if branched off
 that particular release.  After it has been fixed it is merged back into the
-master branch for a new release and from ther merged into development. That way
-the master stays clean and the development still gets the fix.
+master branch for a new release and from there merged into development. That
+way the master stays clean and the development still gets the fix.
 
 Further documentation
 #####################
