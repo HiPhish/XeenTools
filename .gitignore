@@ -1,0 +1,46 @@
+################
+# OS generated #
+################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+######################
+# Compiler generated #
+######################
+*.o
+*.out
+*.plist
+newton
+
+#####################
+# Doxygen generated #
+#####################
+*.html
+*.htm
+*.js
+*.png
+*.svg
+*.tex
+*.pdf
+
+#################
+# Vim generated #
+#################
+*~
+*.swapfile
+*.swp
+.exrc
+.ycm_extra_conf*
+
+#########################
+# Tags files from Ctags #
+#########################
+tags
+
+
