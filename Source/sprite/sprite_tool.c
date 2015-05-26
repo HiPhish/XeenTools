@@ -340,6 +340,11 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 	/* Copy the first cell */
 	memcpy(pixels, sprite.cell[i[0]].pixels, surface[0] * sizeof(uint8_t));
 
+	/* Short-circuit to the end if the frame has only one cell */
+	if (i[0] == i[1]) {
+		goto end;
+	}
+
 	/* Pad with transparency if necessary */
 	if (sprite.cell[i[0]].height < height) {
 		for (int i = surface[0]; i < width * height; ++i) {
@@ -347,14 +352,12 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 		}
 	}
 
-	/* If the frame is using more than one cell */
-	if (i[0] != i[1]) { 
-		for (int j = 0; j < surface[1]; ++j) {
-			if (sprite.cell[i[1]].pixels[j] == transparent) { continue; }
-			pixels[j] = sprite.cell[i[1]].pixels[j];
-		}
+	for (int j = 0; j < surface[1]; ++j) {
+		if (sprite.cell[i[1]].pixels[j] == transparent) { continue; }
+		pixels[j] = sprite.cell[i[1]].pixels[j];
 	}
 
+end:
 	*frame = (XeenFrame) {
 		.width  = width,
 		.height = height,
