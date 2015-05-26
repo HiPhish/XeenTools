@@ -3,7 +3,9 @@ CC       = clang
 OBJECTS  = cc_tool.o     \
            sprite_tool.o \
            pal_tool.o    \
-		   cpp_tool.o
+		   cpp_tool.o    \
+           att_tool.o    \
+           mon_tool.o
 BINARIES = cc_extract sprite_extract pal_extract cpp_extract
 
 #===[ TARGETS ]=================================================================
@@ -52,6 +54,12 @@ pal_tool.o: pal/pal_tool.c pal/pal_tool.h
 
 cpp_tool.o: cpp/cpp_tool.c cpp/cpp_tool.h
 	@${CC} ${CFLAGS} -c -o cpp_tool.o cpp/$*.c
+
+att_tool.o: att/att_tool.c att/att_tool.c
+	@${CC} ${CFLAGS} -c -o att_tool.o att/$*.c
+
+mon_tool.o: mon/mon_tool.c mon/mon_tool.c
+	@${CC} ${CFLAGS} -c -o mon_tool.o mon/$*.c
 
 #---[ Phony targets ]-----------------------------------------------------------
 
