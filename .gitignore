@@ -16,7 +16,14 @@ Thumbs.db
 *.o
 *.out
 *.plist
+*.dSYM
 newton
+
+############
+# Binaries #
+############
+cc_extract
+pal_extract
 
 #####################
 # Doxygen generated #
@@ -42,5 +49,4 @@ newton
 # Tags files from Ctags #
 #########################
 tags
-
 
