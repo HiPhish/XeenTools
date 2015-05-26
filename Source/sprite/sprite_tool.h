@@ -134,7 +134,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent);
  *
  *  @param sprite       The sprite to get the frame from.
  *  @param frame        Pointer to store the resulting frame.
- *  @param i            Index of the frame.
+ *  @param index        Index of the frame.
  *  @param transparent  Index of the transparent colour
  *
  *  @return  Error code:
@@ -148,6 +148,11 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent);
  *        height and a NULL pointer for pixels.
  *
  *  @post  The memory pointed at by `frame` will be a valid frame on success.
+ *
+ *  The size of the resulting frame will be the size of the bigger of the two
+ *  cells. If a frame consists of only one cell the pixels of the cell will be
+ *  copied so the frame and the cell can changed without affecting the other.
+ *  For frames made of two cells a new pixel sequence is created anyway.
  */
 int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t transparent);
 

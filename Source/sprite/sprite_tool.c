@@ -309,6 +309,15 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 
 	uint8_t *pixels = NULL; /* Array of pixel bytes. */
 
+	/* Pre-conditions */
+	if (!sprite.cell || !sprite.frame_map || !frame) {
+		error = INVALID_ARGS; /* Pointers must be valid. */
+		goto fail;
+	} else if (frame->pixels != NULL || frame->width != 0 || frame->height != 0) {
+		error = INVALID_ARGS; /* Frame must be initialised to empty. */
+		goto fail;
+	}
+
 	/* Cell indices */
 	int i[2] = {
 		sprite.frame_map[index].cell[0], /**< Cell index 0. */
@@ -321,23 +330,24 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 		sprite.cell[i[1]].width * sprite.cell[i[1]].height,
 	};
 
-	/* Pre-conditions */
-	if (!sprite.cell || !sprite.frame_map || !frame) {
-		error = INVALID_ARGS; /* Pointers must be valid. */
-		goto fail;
-	}
-	if (frame->pixels != NULL || frame->width != 0 || frame->height != 0) {
-		error = INVALID_ARGS; /* Frame must be initialised to empty. */
-		goto fail;
-	}
+	/* Size of the new frame */
+	uint16_t width  = sprite.cell[i[0]].width  > sprite.cell[i[1]].width  ? sprite.cell[i[0]].width  : sprite.cell[i[1]].width;
+	uint16_t height = sprite.cell[i[0]].height > sprite.cell[i[1]].height ? sprite.cell[i[0]].height : sprite.cell[i[1]].height;
 
 	/* Allocate memory for the sprite map */
-	ALLOC(pixels, sizeof(uint8_t) * surface[0])
+	ALLOC(pixels, sizeof(uint8_t) * width * height)
 
 	/* Copy the first cell */
 	memcpy(pixels, sprite.cell[i[0]].pixels, surface[0] * sizeof(uint8_t));
 
-	/* If the frame is using only one cell */
+	/* Pad with transparency if necessary */
+	if (sprite.cell[i[0]].height < height) {
+		for (int i = surface[0]; i < width * height; ++i) {
+			pixels[i] = transparent;
+		}
+	}
+
+	/* If the frame is using more than one cell */
 	if (i[0] != i[1]) { 
 		for (int j = 0; j < surface[1]; ++j) {
 			if (sprite.cell[i[1]].pixels[j] == transparent) { continue; }
@@ -346,8 +356,8 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 	}
 
 	*frame = (XeenFrame) {
-		.width  = sprite.cell[i[0]].width,
-		.height = sprite.cell[i[0]].height,
+		.width  = width,
+		.height = height,
 		.pixels = pixels,
 	};
 
