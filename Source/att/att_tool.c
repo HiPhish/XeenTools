@@ -11,7 +11,7 @@ int xeen_att_get_frame(enum xeen_att_frame f, XeenSprite s, XeenFrame *frame, ui
 	if (!frame || f >= XEEN_ATT_FRAMES) {
 		error = INVALID_ARGS;
 		goto end;
-	} else if (frame->pixels) {
+	} else if (frame->width != 0 || frame->height != 0 || frame->pixels) {
 		error = INVALID_ARGS;
 		goto end;
 	}

@@ -54,7 +54,7 @@ So far the following file formats are supported:
 - [ ] CHR
 - [o] DAT sprite info files for objects.
 - [o] copy-protection files
-- [ ] FAC
+- [o] FAC
 - [ ] FNT
 - [ ] FWL
 - [ ] M
