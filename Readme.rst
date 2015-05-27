@@ -55,7 +55,7 @@ So far the following file formats are supported:
 - [o] DAT sprite info files for objects.
 - [o] copy-protection files
 - [o] FAC
-- [ ] FNT
+- [o] FNT font files
 - [ ] FWL
 - [ ] M
 - [ ] MOB

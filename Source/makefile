@@ -3,8 +3,9 @@ CC       = clang
 OBJECTS  = cc_tool.o     \
            sprite_tool.o \
            pal_tool.o    \
-		   cpp_tool.o
-BINARIES = cc_extract sprite_extract pal_extract cpp_extract
+		   cpp_tool.o    \
+           fnt_tool.o
+BINARIES = cc_extract sprite_extract pal_extract cpp_extract fnt_extract
 
 #===[ TARGETS ]=================================================================
 
@@ -39,6 +40,9 @@ pal_extract: pal_extract.c pal_tool.o
 cpp_extract: cpp_extract.c cpp_tool.o
 	@${CC} ${CFLAGS} -o cpp_extract cpp_extract.c cpp_tool.o
 
+fnt_extract: fnt_extract.c fnt_tool.o
+	@${CC} ${CFLAGS} -o fnt_extract fnt_extract.c fnt_tool.o
+
 #---[ OBJECTS ]-----------------------------------------------------------------
 
 cc_tool.o: cc_tool/cc_tool.c cc_tool/cc_tool.h
@@ -52,6 +56,9 @@ pal_tool.o: pal/pal_tool.c pal/pal_tool.h
 
 cpp_tool.o: cpp/cpp_tool.c cpp/cpp_tool.h
 	@${CC} ${CFLAGS} -c -o cpp_tool.o cpp/$*.c
+
+fnt_tool.o: fnt/fnt_tool.c fnt/fnt_tool.h
+	@${CC} ${CFLAGS} -c -o fnt_tool.o fnt/$*.c
 
 #---[ Phony targets ]-----------------------------------------------------------
 

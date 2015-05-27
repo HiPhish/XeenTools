@@ -26,6 +26,7 @@ cc_extract
 pal_extract
 sprite_extract
 cpp_extract
+fnt_extract
 
 #####################
 # Doxygen generated #
