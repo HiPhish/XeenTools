@@ -53,7 +53,8 @@ So far the following file formats are supported:
 - [o] CFG configurations for DOS.
 - [ ] CHR
 - [o] DAT sprite info files for objects.
-- [o] copy-protection files
+- [ ] Environment sets
+- [o] Copy-protection files
 - [o] FAC
 - [o] FNT font files
 - [ ] FWL
