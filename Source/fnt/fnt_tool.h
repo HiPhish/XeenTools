@@ -41,6 +41,10 @@
  *     	uint8_t pixel = (l&mask) >> XEEN_GLYPH_PIXEL_SIZE*(XEEN_GLYPH_LINE_PIXELS-i-1);
  *  @endcode
  *  to get the pixel, as a byte in this case.
+ *
+ *  Aside from the glyphs themselves there is also spacing information stored
+ *  in the FNT file. There is one byte for every glyph, indexed first by the
+ *  character, second by the typeface.
  */
 
 #include <stdint.h>
@@ -67,10 +71,28 @@ enum xeen_typeface {
 
 /** Font structure. */
 typedef struct xeen_font {
-	uint16_t chr[XEEN_FNT_CHARS][XEEN_TYPEFACES][XEEN_GLYPH_LINES]; /**< Characters. */
-	uint8_t  spc[XEEN_FNT_CHARS][XEEN_TYPEFACES]; /**< Spacing.    */
+	uint16_t glyph[XEEN_FNT_CHARS][XEEN_TYPEFACES][XEEN_GLYPH_LINES]; /**< Glyphs.  */
+	uint8_t  space[XEEN_FNT_CHARS][XEEN_TYPEFACES];                   /**< Spacing. */
 } XeenFont;
 
+/** Read the contents of a FNT file.
+ *
+ *  @param fp
+ *  @param o
+ *  @param fnt
+ *
+ *  @return Error code:
+ *            - 0: Success
+ *            - 1: Invalid arguments
+ *            - 2: Failed reading file
+ *
+ *  @pre  The pointers must be valid.
+ *
+ *  @post  The font will be assigned.
+ *
+ *  This function will mutate the font even if it fails, so be careful when
+ *  passing it a pointer.
+ */
 int xeen_read_font(FILE *fp, long o, XeenFont *fnt);
 
 /** Initialise an empty font object.
