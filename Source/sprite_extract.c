@@ -180,13 +180,19 @@ void print_sprite_info(XeenSprite s) {
 		printf("  Cell %i: %i x %i\n", i, s.cell[i].width, s.cell[i].height);
 	}
 	for (int i = 0; i < s.frames; ++i) {
-		printf("  Frame %i: (%i , %i)\n", i, s.frame_map[i].cell[0], s.frame_map[i].cell[1]);
+		int cell[2] = {
+			s.frame_map[i].cell[0], s.frame_map[i].cell[1]
+		};
+		int width  = s.cell[cell[0]].width  > s.cell[cell[1]].width  ? s.cell[cell[0]].width  : s.cell[cell[1]].width;
+		int height = s.cell[cell[0]].height > s.cell[cell[1]].height ? s.cell[cell[0]].height : s.cell[cell[1]].height;
+		printf("  Frame %i: %i x %i (%i , %i)\n", i, width, height, cell[0], cell[1]);
 	}
 	printf("\n");
 }
 
 void print_help() {
 	printf("Usage: sprite_extract --pal palette ((--cell number) | (--frame number))\n");
+	printf("       sprite_extract --info\n");
 	printf("\n");
 	printf("The program is run by passing a palette file as an argument, as well as either\n");
 	printf("a cell or a frame to print. The sprite file is the standard input and the\n");
