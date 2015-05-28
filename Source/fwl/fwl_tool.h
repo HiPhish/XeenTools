@@ -20,6 +20,10 @@
  *  five frames of animation. The first frame is given, the other four are the
  *  next four frames.
  *
+ *  If a wall from a certain environment set does not use a particular feature,
+ *  such as having no ladders in that set, the sprite will be set up so it will
+ *  draw the standard wall.
+ *
  *  There is also one unknown wall type, it appears to be just a leftover and
  *  does not contain anything useful.
  */
@@ -56,7 +60,7 @@ enum xeen_fwl_file {
 };
 
 /** Each of the files ends in a different digit like *Fxxxx1.FWL*. */
-extern char xeen_fwl_file_to_char[XEEN_FWL_FILES];
+extern char xeen_fwl_file_to_char[XEEN_FWL_FILES][1];
 
 /** The different distance levels. */
 enum xeen_fwl_distance {
