@@ -1,6 +1,18 @@
 #ifndef XEEN_CHR_TOOL_H
 #define XEEN_CHR_TOOL_H
 
+/** @file chr_tool.h
+ *
+ *  Interface for the MAZE.CHR file.
+ *
+ *  This file stores information about the characters that can be in the party.
+ *  Every entry is a player character (and hireling?) on its own. It does not
+ *  store any information about the party though.
+ *
+ *  @TODO: We have no idea about the structure of items.
+ *  @TODO: We have no idea about the bitfields for awards and spells.
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 
