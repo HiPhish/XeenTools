@@ -2,6 +2,7 @@ CFLAGS   = -std=c11 -pedantic-errors -Werror -Wall -g
 CC       = clang
 OBJECTS  = cc_tool.o     \
            sprite_tool.o \
+		   chr_tool.o    \
            pal_tool.o    \
 		   cpp_tool.o    \
 		   gnd_tool.o    \
@@ -69,6 +70,9 @@ gnd_tool.o: gnd/gnd_tool.c gnd/gnd_tool.h
 
 sky_tool.o: sky/sky_tool.c sky/sky_tool.h
 	@${CC} ${CFLAGS} -c -o sky_tool.o sky/$*.c
+
+chr_tool.o: chr/chr_tool.c chr/chr_tool.h
+	@${CC} ${CFLAGS} -c -o chr_tool.o chr/$*.c
 
 #---[ Phony targets ]-----------------------------------------------------------
 
