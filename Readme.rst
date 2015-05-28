@@ -57,7 +57,7 @@ So far the following file formats are supported:
 - [o] Copy-protection files
 - [o] FAC
 - [o] FNT font files
-- [ ] FWL
+- [o] FWL
 - [ ] M
 - [ ] MOB
 - [o] MON sprite files for idle frames.
