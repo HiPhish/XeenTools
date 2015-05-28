@@ -37,7 +37,7 @@ int print_font(XeenFont *fnt) {
 
 	for (unsigned char c = 0x00; c < 0x7F; ++c) {
 		char string [2] = {c , '\0'};
-		printf("%s: (%i | %i)\n", string, fnt->spc[c][XEEN_TYPE_LARGE], fnt->spc[c][XEEN_TYPE_SMALL]);
+		printf("%s: (%i | %i)\n", string, fnt->space[c][XEEN_TYPE_LARGE], fnt->space[c][XEEN_TYPE_SMALL]);
 		printf("  +--------+--------+\n");
 		for (int l = 0; l < XEEN_GLYPH_LINES; ++l) {
 			char c_map[4] = {
@@ -47,9 +47,9 @@ int print_font(XeenFont *fnt) {
 				[3] = '3',
 			};
 			printf("  |"); /* Leading bar */
-			#define PRINT_LINE(glyph) \
+			#define PRINT_LINE(glph) \
 				for (int j = 0; j < XEEN_GLYPH_LINE_PIXELS; ++j) { \
-					int i = (fnt->chr[c][glyph][l] & (0xC000 >> XEEN_GLYPH_PIXEL_SIZE*j)) >> XEEN_GLYPH_PIXEL_SIZE*(XEEN_GLYPH_LINE_PIXELS-j-1); \
+					int i = (fnt->glyph[c][glph][l] & (0xC000 >> XEEN_GLYPH_PIXEL_SIZE*j)) >> XEEN_GLYPH_PIXEL_SIZE*(XEEN_GLYPH_LINE_PIXELS-j-1); \
 					assert(i < 4); \
 					char i_string[2] = {c_map[i], '\0'}; \
 					printf("%s", i_string); \

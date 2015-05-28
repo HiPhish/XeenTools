@@ -4,6 +4,8 @@ OBJECTS  = cc_tool.o     \
            sprite_tool.o \
            pal_tool.o    \
 		   cpp_tool.o    \
+		   gnd_tool.o    \
+		   sky_tool.o    \
            fnt_tool.o
 BINARIES = cc_extract sprite_extract pal_extract cpp_extract fnt_extract
 
@@ -11,17 +13,19 @@ BINARIES = cc_extract sprite_extract pal_extract cpp_extract fnt_extract
 
 # Unoptimised build for debugging.
 debug: CFLAGS += -O0
-debug: binaries
+debug: binaries objects
 
 # Optimised build for release.
 release: CFLAGS += -O2
-release: binaries
+release: binaries objects
 
 binaries: ${BINARIES}
 
+objects: ${OBJECTS}
+
 # Run static analyser.
 analyze: CFLAGS += --analyze
-analyze: $(OBJECTS)
+analyze: ${BINARIES} $(OBJECTS)
 
 # Alternate spelling.
 analyse: analyze
@@ -59,6 +63,12 @@ cpp_tool.o: cpp/cpp_tool.c cpp/cpp_tool.h
 
 fnt_tool.o: fnt/fnt_tool.c fnt/fnt_tool.h
 	@${CC} ${CFLAGS} -c -o fnt_tool.o fnt/$*.c
+
+gnd_tool.o: gnd/gnd_tool.c gnd/gnd_tool.h
+	@${CC} ${CFLAGS} -c -o gnd_tool.o gnd/$*.c
+
+sky_tool.o: sky/sky_tool.c sky/sky_tool.h
+	@${CC} ${CFLAGS} -c -o sky_tool.o sky/$*.c
 
 #---[ Phony targets ]-----------------------------------------------------------
 

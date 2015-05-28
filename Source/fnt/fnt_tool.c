@@ -46,14 +46,14 @@ int xeen_read_font(FILE *fp, long o, XeenFont *fnt) {
 			}
 			/* Assign character */
 			for (int k = 0; k < XEEN_GLYPH_LINES; ++k) {
-				fnt->chr[j][i][k] = lines[k];
+				fnt->glyph[j][i][k] = lines[k];
 			}
 		}
 	}
 
 	/* Read the spacing */
 	#define CHARS (XEEN_FNT_CHARS * XEEN_TYPEFACES) 
-	if (fread(fnt->spc, sizeof(uint8_t), sizeof(uint8_t) * CHARS, fp) != sizeof(uint8_t) * CHARS) {
+	if (fread(fnt->space, sizeof(uint8_t), sizeof(uint8_t) * CHARS, fp) != sizeof(uint8_t) * CHARS) {
 		error = FREAD_FAIL;
 		goto end;
 	}
@@ -68,9 +68,9 @@ XeenFont xeen_fnt_init() {
 	for (int i = 0; i < XEEN_FNT_CHARS; ++i) {
 		for (int j = 0; j < XEEN_TYPEFACES; ++j) {
 			for (int k = 0; k < XEEN_GLYPH_LINES; ++k) {
-				fnt.chr[i][j][k] = 0x0000;
+				fnt.glyph[i][j][k] = 0x0000;
 			}
-			fnt.spc[i][j] = 0x00;
+			fnt.space[i][j] = 0x00;
 		}
 	}
 	return fnt;

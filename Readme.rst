@@ -58,6 +58,7 @@ So far the following file formats are supported:
 - [o] FAC
 - [o] FNT font files
 - [o] FWL
+- [o] GND ground sprits
 - [ ] M
 - [ ] MOB
 - [o] MON sprite files for idle frames.
@@ -68,6 +69,7 @@ So far the following file formats are supported:
 - [o] sprite files in general
 - [ ] SRF
 - [ ] SWL
+- [o] SKY sky sprites
 - [ ] TIL
 - [ ] TXT
 - [ ] VGA
