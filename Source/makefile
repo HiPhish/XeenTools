@@ -2,6 +2,7 @@ CFLAGS   = -std=c11 -pedantic-errors -Werror -Wall -g
 CC       = clang
 OBJECTS  = cc_tool.o     \
            sprite_tool.o \
+		   chr_tool.o    \
            pal_tool.o    \
 		   cpp_tool.o    \
 		   gnd_tool.o    \
