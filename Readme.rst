@@ -65,11 +65,10 @@ So far the following file formats are supported:
 - [ ] OBJ
 - [o] PAL palette files.
 - [ ] PTY
-- [ ] SKY
+- [o] SKY sky sprites
 - [o] sprite files in general
 - [ ] SRF
 - [ ] SWL
-- [o] SKY sky sprites
 - [ ] TIL
 - [ ] TXT
 - [ ] VGA
