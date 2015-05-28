@@ -51,7 +51,7 @@ So far the following file formats are supported:
 - [o] ATT sprite files for attack frames.
 - [o] CC files, containers that hold other files.
 - [o] CFG configurations for DOS.
-- [ ] CHR
+- [o] CHR
 - [o] DAT sprite info files for objects.
 - [o] Environment sets
 - [o] Copy-protection files
