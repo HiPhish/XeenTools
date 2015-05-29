@@ -53,7 +53,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 	uint16_t  cell_count   = 0; /* Number of cells in the sprite  */
 	uint16_t *cell_offsets = NULL;
 
-	XeenSpriteFrameMap *frame_map = NULL;
+	uint16_t (*frame_map)[2] = NULL;
 
 	/* Pointer to cell memory and current pixel. */
 	uint8_t   *canvas = NULL, *brush = NULL;
@@ -84,7 +84,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 			if (cell_offsets[2*i+j] == 0x000) {
 				/* this may only be the case for the second cell */
 				assert(j == 1);
-				frame_map[i].cell[j] = frame_map[i].cell[j-1];
+				frame_map[i][j] = frame_map[i][j-1];
 				continue;
 			}
 			/* If the cell is known */
@@ -92,7 +92,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 			for (int k = 0; k < 2*i+j; ++k) {
 				if (cell_offsets[k] == cell_offsets[2*i+j]) {
 					known_cell = 1;
-					frame_map[i].cell[j] = frame_map[k/2].cell[k%2];
+					frame_map[i][j] = frame_map[k/2][k%2];
 					break;
 				}
 			}
@@ -100,7 +100,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 				continue;
 			}
 
-			frame_map[i].cell[j] = cell_count++;
+			frame_map[i][j] = cell_count++;
 		}
 	}
 	/* Now all cells are accessible by index */
@@ -131,7 +131,7 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 		uint16_t offset = 0x0000;
 		/* Find the offset of this cell */
 		for (int j = 0; j < frames * 2; ++j) {
-			if (frame_map[j/2].cell[j%2] == i) {
+			if (frame_map[j/2][j%2] == i) {
 				offset = cell_offsets[j];
 				break;
 			}
@@ -320,8 +320,8 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 
 	/* Cell indices */
 	int i[2] = {
-		sprite.frame_map[index].cell[0], /**< Cell index 0. */
-		sprite.frame_map[index].cell[1], /**< Cell index 1. */
+		sprite.frame_map[index][0], /**< Cell index 0. */
+		sprite.frame_map[index][1], /**< Cell index 1. */
 	};
 
 	/** Surface area of the cells in pixels. */

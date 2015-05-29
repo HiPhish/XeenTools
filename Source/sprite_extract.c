@@ -181,7 +181,7 @@ void print_sprite_info(XeenSprite s) {
 	}
 	for (int i = 0; i < s.frames; ++i) {
 		int cell[2] = {
-			s.frame_map[i].cell[0], s.frame_map[i].cell[1]
+			s.frame_map[i][0], s.frame_map[i][1]
 		};
 		int width  = s.cell[cell[0]].width  > s.cell[cell[1]].width  ? s.cell[cell[0]].width  : s.cell[cell[1]].width;
 		int height = s.cell[cell[0]].height > s.cell[cell[1]].height ? s.cell[cell[0]].height : s.cell[cell[1]].height;

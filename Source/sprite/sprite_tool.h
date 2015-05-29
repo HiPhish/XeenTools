@@ -68,19 +68,6 @@
 #include <stdio.h>
 #include <stdint.h>
 
-/** Structure listing the cells of a frame.
- *
- *  A frame consists of two cells stacked on top of each other. Some frames
- *  use only one cell, in which case the second cell is the same as the first.
- *  To avoid drawing the same cell twice check for this.
- *
- *  Ideally this structure should be replaced with a pointer to two-dimensional
- *  arrays.
- */
-typedef struct xeen_sprite_frame_map {
-	uint16_t cell[2]; /**< Indices of cells in a frame. */
-} XeenSpriteFrameMap;
-
 /** A frame (or cell) of a sprite animation. */
 typedef struct sprt_frame {
 	uint16_t  width;  /**< Width of the frame.  */
@@ -97,13 +84,17 @@ typedef struct sprt_frame {
  *  The structure also contains information on how many frames and cells the
  *  sprite is made of. These are also the sizes of the frame map- and cells
  *  arrays.
+ *
+ *  The frame map is a pointer to arrays of two 16-bit integers. The length of
+ *  the array sequence can vary, but the length of an array in the sequence is
+ *  always two numbers.
  */
 typedef struct xeen_sprite {
-	uint16_t frames; /**< Number of frames. */
-	uint16_t cell_count ; /**< Number of cells.  */
+	uint16_t frames;     /**< Number of frames. */
+	uint16_t cell_count; /**< Number of cells.  */
 
 	/**< Map cells to frames. */
-	XeenSpriteFrameMap *frame_map;
+	uint16_t (*frame_map)[2];
 
 	/** Uncompressed cells */
 	XeenFrame *cell;

@@ -79,7 +79,7 @@ sky_tool.o: sky/sky_tool.c sky/sky_tool.h
 chr_tool.o: chr/chr_tool.c chr/chr_tool.h
 	@${CC} ${CFLAGS} -c -o chr_tool.o chr/$*.c
 
-raw_tool.o: raw/raw_tool.c raw/raw_tool.h xeen/xeen.h
+raw_tool.o: raw/raw_tool.c raw/raw_tool.h xeen/xeen.h sprite_tool.o
 	@${CC} ${CFLAGS} -c -o raw_tool.o raw/$*.c
 
 #---[ Phony targets ]-----------------------------------------------------------

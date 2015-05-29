@@ -27,9 +27,9 @@ int xeen_read_raw(FILE *fp, long o, XeenSprite *raw) {
 		goto end;
 	}
 
-	uint8_t            *bytes = malloc(A * sizeof(uint8_t));
-	XeenSpriteFrameMap *map   = malloc(1 * sizeof(*map   ));
-	XeenFrame          *frame = malloc(1 * sizeof(*frame ));
+	uint8_t     *bytes = malloc(A * sizeof( *bytes ));
+	uint16_t (*map)[2] = malloc(1 * sizeof( *map   ));
+	XeenFrame   *frame = malloc(1 * sizeof( *frame ));
 
 	if (!bytes || !map || !frame) {
 		error = MALLOC_FAIL;
@@ -44,7 +44,7 @@ int xeen_read_raw(FILE *fp, long o, XeenSprite *raw) {
 		goto end;
 	}
 
-	*map = (XeenSpriteFrameMap){.cell = { [0] = 0, [1] = 0 } };
+	*map[0] = *map[1] = 0;
 	*frame = (XeenFrame) {
 		.width  = X,
 		.height = Y,
