@@ -148,13 +148,13 @@ enum xeen_item_attrib {
 };
 
 enum xeen_item_suffix {
-	XEEN_ITEM_DRAGON_SLAYER  , /**< Dragon_Slayer  */
-	XEEN_ITEM_UNDEAD_EATER   , /**< Undead_Eater   */
-	XEEN_ITEM_GOLEM_SMASHER  , /**< Golem_Smasher  */
-	XEEN_ITEM_BUG_ZAPPER     , /**< Bug_Zapper     */
-	XEEN_ITEM_MONSTER_MASHER , /**< Monster_Masher */
-	XEEN_ITEM_BEAST_BOPPER   , /**< Beast_Bopper   */
-	XEEN_ITEM_SUFFIX         , /**< Suffixes       */
+	XEEN_ITEM_DRAGON  , /**< Dragon_Slayer  */
+	XEEN_ITEM_UNDEAD  , /**< Undead_Eater   */
+	XEEN_ITEM_GOLEM   , /**< Golem_Smasher  */
+	XEEN_ITEM_BUG     , /**< Bug_Zapper     */
+	XEEN_ITEM_MONSTER , /**< Monster_Masher */
+	XEEN_ITEM_BEAST   , /**< Beast_Bopper   */
+	XEEN_ITEM_SUFFIX  , /**< Suffixes       */
 };
 
 /** Structure of an item. */
