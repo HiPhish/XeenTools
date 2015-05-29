@@ -39,10 +39,10 @@ int main(int argc, char **argv) {
 
 
 	XeenSprite s = {
-		.frames     = 0,
-		.cell_count = 0,
-		.frame_map  = NULL,
-		.cell       = NULL,
+		.frames = 0,
+		.cells  = 0,
+		.map    = NULL,
+		.cell   = NULL,
 	};
 
 	XeenFrame f = {
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 		error = SPR_READ_FAIL;
 		goto end;
 	}
-	assert(s.cell && s.frame_map);
+	assert(s.cell && s.map);
 
 	switch (option) {
 		case FRAME:
@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
 			print_frame_as_ppm(f, p);
 			break;
 		case CELL:
-			if (cell_number >= s.cell_count) {
+			if (cell_number >= s.cells) {
 				error = INVALID_ARGS;
 				goto end;
 			}
@@ -141,10 +141,10 @@ int main(int argc, char **argv) {
 	}
 
 end:
-	if (s.frame_map) { free(s.frame_map); }
-	if (s.cell     ) { free(s.cell     ); }
-	if (f.pixels   ) { free(f.pixels   ); }
-	if (p          ) { free(p          ); }
+	if (s.map   ) { free(s.map   ); }
+	if (s.cell  ) { free(s.cell  ); }
+	if (f.pixels) { free(f.pixels); }
+	if (p       ) { free(p       ); }
 	return error;
 }
 
@@ -175,13 +175,13 @@ end:
 }
 
 void print_sprite_info(XeenSprite s) {
-	printf("Cells: %i; frames: %i\n", s.cell_count, s.frames);
-	for (int i = 0; i < s.cell_count; ++i) {
+	printf("Cells: %i; frames: %i\n", s.cells, s.frames);
+	for (int i = 0; i < s.cells; ++i) {
 		printf("  Cell %i: %i x %i\n", i, s.cell[i].width, s.cell[i].height);
 	}
 	for (int i = 0; i < s.frames; ++i) {
 		int cell[2] = {
-			s.frame_map[i][0], s.frame_map[i][1]
+			s.map[i][0], s.map[i][1]
 		};
 		int width  = s.cell[cell[0]].width  > s.cell[cell[1]].width  ? s.cell[cell[0]].width  : s.cell[cell[1]].width;
 		int height = s.cell[cell[0]].height > s.cell[cell[1]].height ? s.cell[cell[0]].height : s.cell[cell[1]].height;

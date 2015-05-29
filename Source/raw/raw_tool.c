@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include "raw_tool.h"
 
-#define X xeen_raw_size[XEEN_X]
-#define Y xeen_raw_size[XEEN_Y]
-#define A (X * Y)
+#define X  xeen_raw_size[XEEN_X] /**< Width of the image.        */
+#define Y  xeen_raw_size[XEEN_Y] /**< Height of the image.       */
+#define A  (X * Y)               /**< Surface area of the image. */
 
 uint16_t xeen_raw_size[XEEN_COORDS] = {
 	[XEEN_X] = 320,
@@ -22,7 +22,7 @@ int xeen_read_raw(FILE *fp, long o, XeenSprite *raw) {
 	if (!fp || !raw) {
 		error = INVALID_ARGS;
 		goto end;
-	} else if (raw->frames != 0 || raw->cell_count != 0 || raw->frame_map != NULL || raw->cell != NULL) {
+	} else if (raw->frames != 0 || raw->cells != 0 || raw->map != NULL || raw->cell != NULL) {
 		error = INVALID_ARGS;
 		goto end;
 	}
@@ -52,10 +52,10 @@ int xeen_read_raw(FILE *fp, long o, XeenSprite *raw) {
 	};
 
 	*raw = (XeenSprite) {
-		.frames     = 1,
-		.cell_count = 1,
-		.frame_map  = map,
-		.cell       = frame,
+		.frames = 1,
+		.cells  = 1,
+		.map    = map,
+		.cell   = frame,
 	};
 
 end:

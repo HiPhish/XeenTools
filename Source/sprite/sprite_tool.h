@@ -90,14 +90,10 @@ typedef struct sprt_frame {
  *  always two numbers.
  */
 typedef struct xeen_sprite {
-	uint16_t frames;     /**< Number of frames. */
-	uint16_t cell_count; /**< Number of cells.  */
-
-	/**< Map cells to frames. */
-	uint16_t (*frame_map)[2];
-
-	/** Uncompressed cells */
-	XeenFrame *cell;
+	uint16_t   frames   ; /**< Number of frames.    */
+	uint16_t   cells    ; /**< Number of cells.     */
+	uint16_t  (*map)[2] ; /**< Map cells to frames. */
+	XeenFrame  *cell    ; /** Uncompressed cells.   */
 } XeenSprite;
 
 /** Read a sprite from file.

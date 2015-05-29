@@ -48,15 +48,15 @@ int main(int argc, char **argv) {
 
 	XeenSprite raw = {
 		.frames     = 0,
-		.cell_count = 0,
-		.frame_map  = NULL,
+		.cells = 0,
+		.map  = NULL,
 		.cell       = NULL,
 	};
 
 	if ((error = xeen_read_raw(stdin, 0, &raw))) {
 		goto end;
 	}
-	assert(raw.frame_map && raw.cell);
+	assert(raw.map && raw.cell);
 
 	error = print_raw(raw, p);
 

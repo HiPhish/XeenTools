@@ -280,8 +280,8 @@ int xeen_read_sprite(FILE *fp, long fo, XeenSprite *sp, uint8_t transparent) {
 	/* Now assign the sprite variables */
 	*sp = (XeenSprite) {
 		.frames     = frames,
-		.cell_count = cell_count,
-		.frame_map  = frame_map,
+		.cells = cell_count,
+		.map  = frame_map,
 		.cell       = cells,
 	};
 
@@ -310,7 +310,7 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 	uint8_t *pixels = NULL; /* Array of pixel bytes. */
 
 	/* Pre-conditions */
-	if (!sprite.cell || !sprite.frame_map || !frame) {
+	if (!sprite.cell || !sprite.map || !frame) {
 		error = INVALID_ARGS; /* Pointers must be valid. */
 		goto fail;
 	} else if (frame->pixels != NULL || frame->width != 0 || frame->height != 0) {
@@ -320,8 +320,8 @@ int xeen_get_frame(XeenSprite sprite, XeenFrame *frame, uint16_t index, uint8_t 
 
 	/* Cell indices */
 	int i[2] = {
-		sprite.frame_map[index][0], /**< Cell index 0. */
-		sprite.frame_map[index][1], /**< Cell index 1. */
+		sprite.map[index][0], /**< Cell index 0. */
+		sprite.map[index][1], /**< Cell index 1. */
 	};
 
 	/** Surface area of the cells in pixels. */
