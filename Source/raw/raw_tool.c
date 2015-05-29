@@ -22,6 +22,9 @@ int xeen_read_raw(FILE *fp, long o, XeenSprite *raw) {
 	if (!fp || !raw) {
 		error = INVALID_ARGS;
 		goto end;
+	} else if (raw->frames != 0 || raw->cell_count != 0 || raw->frame_map != NULL || raw->cell != NULL) {
+		error = INVALID_ARGS;
+		goto end;
 	}
 
 	uint8_t            *bytes = malloc(A * sizeof(uint8_t));

@@ -9,7 +9,8 @@ OBJECTS  = cc_tool.o     \
 		   sky_tool.o    \
 		   raw_tool.o    \
            fnt_tool.o
-BINARIES = cc_extract sprite_extract pal_extract cpp_extract fnt_extract
+BINARIES = cc_extract sprite_extract pal_extract cpp_extract fnt_extract \
+           raw_extract
 
 #===[ TARGETS ]=================================================================
 
@@ -48,6 +49,9 @@ cpp_extract: cpp_extract.c cpp_tool.o
 
 fnt_extract: fnt_extract.c fnt_tool.o
 	@${CC} ${CFLAGS} -o fnt_extract fnt_extract.c fnt_tool.o
+
+raw_extract: raw_extract.c raw_tool.o sprite_tool.o pal_tool.o
+	@${CC} ${CFLAGS} -o raw_extract raw_extract.c raw_tool.o sprite_tool.o pal_tool.o
 
 #---[ OBJECTS ]-----------------------------------------------------------------
 
