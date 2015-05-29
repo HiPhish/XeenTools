@@ -124,10 +124,12 @@ int xeen_chr_read_entry(FILE *fp, long o, int i, XeenChrEntry *entry) {
 
 		#define ITEM(i) \
 			[i] = { \
-				[0] = bytes[OFS + i*4 + 0], \
-				[1] = bytes[OFS + i*4 + 1], \
-				[2] = bytes[OFS + i*4 + 2], \
-				[3] = bytes[OFS + i*4 + 3], \
+				.id        = bytes[OFS + i*4 + 0],                         \
+				.element   = bytes[OFS + i*4 + 1] - 0,                     \
+				.material  = bytes[OFS + i*4 + 1] - XEEN_ITEM_E_ELEMENTS,  \
+				.attribute = bytes[OFS + i*4 + 1] - XEEN_ITEM_M_MATERIALS, \
+				.suffix    = bytes[OFS + i*4 + 2],                         \
+				.condition = bytes[OFS + i*4 + 3],                         \
 			}
 		.weapon = {
 			#define OFS  0x0A6

@@ -9,12 +9,13 @@
  *  Every entry is a player character (and hireling?) on its own. It does not
  *  store any information about the party though.
  *
- *  @TODO: We have no idea about the structure of items.
  *  @TODO: We have no idea about the bitfields for awards and spells.
  */
 
 #include <stdint.h>
 #include <stdio.h>
+
+#include "../item/item.h"
 
 /** Sexes in a CHR file represented as bytes. */
 enum xeen_chr_sex {
@@ -152,10 +153,12 @@ typedef struct xeen_chr_entry {
 	uint8_t  has_spell;
 	uint8_t  cur_spell;
 	uint8_t  quick;
-	uint8_t  weapon[36][4];
-	uint8_t  armor[36][4];
-	uint8_t  accessory[36][4];
-	uint8_t  misc_item[36][4];
+
+	XeenItem  weapon    [9];
+	XeenItem  armor     [9];
+	XeenItem  accessory [9];
+	XeenItem  misc_item [9];
+
 	uint8_t  resistance[XEEN_CHR_ELEMENTS][XEEN_CHR_MODIFIERS];
 	uint8_t  condition[XEEN_CHR_CONDITIONS];
 	uint8_t  unknown_1[2];
