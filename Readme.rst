@@ -70,7 +70,8 @@ So far the following file formats are supported:
 - [o] sprite files in general
 - [ ] SRF
 - [ ] SWL
-- [ ] TIL
+- [-] TIL sprite files for minimap tiles.
+  Still to do: The tiles need to be enumerated with proper names.
 - [ ] TXT
 - [ ] VGA
 - [ ] VOC
