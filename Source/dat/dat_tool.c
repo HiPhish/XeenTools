@@ -61,7 +61,7 @@ end:
 	return error;
 }
 
-int xeen_read_outdoor_map(FILE *fp, long o, XeenOutdoorMap *map) {
+int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map) {
 	enum {
 		SUCCESS,
 		INVALID_ARGS,
@@ -81,7 +81,7 @@ int xeen_read_outdoor_map(FILE *fp, long o, XeenOutdoorMap *map) {
 	XeenOutdoorTile *tile = NULL;
 
 	/* Jump to position */
-	if (fseek(fp, o, SEEK_SET) != 0) {
+	if (fseek(fp, 0, SEEK_SET) != 0) {
 		error = FREAD_FAIL;
 		goto end;
 	}
@@ -101,18 +101,18 @@ int xeen_read_outdoor_map(FILE *fp, long o, XeenOutdoorMap *map) {
 
 	for (int y = 0; y < XEEN_MAP_HEIGHT; ++y) {
 		for (int x = 0; x < XEEN_MAP_WIDTH; ++x) {
-			int i = y * XEEN_MAP_HEIGHT + x; 
-			int j = 2*y * XEEN_MAP_HEIGHT + 2*x;
+			int i = 1 * y * XEEN_MAP_HEIGHT + 1 * x; /* Index of the tile.    */
+			int j = 2 * y * XEEN_MAP_HEIGHT + 2 * x; /* Index into the bytes. */
 
 			/* Wall data */
-			tile[i].ground  = bytes[j + 0] & 0x0F;
-			tile[i].middle  = bytes[j + 0] & 0xF0;
-			tile[i].top     = bytes[j + 1] & 0x0F;
-			tile[i].overlay = bytes[j + 1] & 0xF0;
+			tile[i].ground  = bytes[j + 0] & 0x0F; /* Low  nibble of low  byte. */
+			tile[i].middle  = bytes[j + 0] & 0xF0; /* High nibble of low  byte. */
+			tile[i].top     = bytes[j + 1] & 0x0F; /* Low  nibble of high byte. */
+			tile[i].overlay = bytes[j + 1] & 0xF0; /* High nibble of high byte. */
 			assert((tile[i]).ground < 16);
 
 			/* Flags */
-			tile[i].flags = bytes[2 * TILES + y * XEEN_MAP_HEIGHT + x];
+			tile[i].flags = bytes[2 * TILES + i];
 		}
 	}
 

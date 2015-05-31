@@ -41,76 +41,59 @@ typedef struct xeen_sprite_frame_info {
 	uint8_t last  [XEEN_SPRITE_DIRECTIONS]; /**< Last frame.                   */
 } XeenSpriteFrameInfo;
 
-enum xeen_outdoor_flag {
-	XEEN_OUTDOOR_F_MON_L  = 0X01,
-	XEEN_OUTDOOR_F_MON_C  = 0X02,
-	XEEN_OUTDOOR_F_MON_R  = 0X04,
-	XEEN_OUTDOOR_F_OBJECT = 0x08,
-	XEEN_OUTDOOR_F_EVENT  = 0x10,
-	XEEN_OUTDOOR_F_DRAIN  = 0x20,
-	XEEN_OUTDOOR_F_WATER  = 0x40,
-	XEEN_OUTDOOR_F_GRATE  = 0x80,
-	XEEN_OUTDOOR_FLAGS    =    8,
-};
-
-enum xeen_indoor_flag {
-	XEEN_INDOOR_F_INSIDE   = 0x08,
-	XEEN_INDOOR_F_EVENT    = 0x10,
-	XEEN_INDOOR_F_UNKOWN_2 = 0X20,
-	XEEN_INDOOR_F_WATER    = 0x40,
-	XEEN_INDOOR_F_UNKOWN_1 = 0X80,
-	XEEN_INDOOR_FLAGS      =    5,
-};
-
-typedef struct xeen_outdoor_tile {
-	uint8_t ground;
-	uint8_t middle;
-	uint8_t top;
-	uint8_t overlay;
-	uint8_t flags;
-} XeenOutdoorTile;
-
-typedef struct xeen_outdoor_map {
-	XeenOutdoorTile *tile;
-
-	uint16_t map_n;
-	uint16_t map_e;
-	uint16_t map_s;
-	uint16_t map_w;
-
-	uint16_t maze_flag_1;
-	uint16_t maze_flag_2;
-
-	uint8_t wall_types  [16];
-	uint8_t floor_types [16];
-
-	uint8_t wall_type;
-	uint8_t floor_type;
-	uint8_t run_chance;
-	uint8_t run_x;
-	uint8_t run_y;
-	uint8_t wall_no_pass;
-	uint8_t surf_no_pass;
-	uint8_t unlock_door;
-	uint8_t unlock_box;
-	uint8_t bash_door;
-	uint8_t bash_grate;
-	uint8_t bash_wall;
-	uint8_t trap_dmg;
-	uint8_t tavern_tips;
-
-	uint32_t seen;
-	uint32_t stepped;
-} XeenOutdoorMap;
-
+/** Structure of an indoor map tile. */
 typedef struct xeen_indoor_tile {
-	uint8_t wall_n;
-	uint8_t wall_e;
-	uint8_t wall_s;
-	uint8_t wall_w;
-	uint8_t flags;
+	uint8_t wall_n; /**< Wall to the north. */
+	uint8_t wall_e; /**< Wall to the east.  */
+	uint8_t wall_s; /**< Wall to the south. */
+	uint8_t wall_w; /**< Wall to the west.  */
+	uint8_t flags;  /**< Tile flags.        */
 } XeenIndoorTile;
 
+/** Structure of an outdoor map tile. */
+typedef struct xeen_outdoor_tile {
+	uint8_t ground;   /***< Ground layer.  */
+	uint8_t middle;   /***< Middle layer.  */
+	uint8_t top;      /***< Top layer.     */
+	uint8_t overlay;  /***< Overlay layer. */
+	uint8_t flags;    /***< Tile flags.    */
+} XeenOutdoorTile;
+
+/** Structure of an indoor map. */
+typedef struct xeen_outdoor_map {
+	XeenOutdoorTile *tile; /**< Sequence of tiles, row-major. */
+
+	uint16_t map_n; /**< ID of the map to the north. */
+	uint16_t map_e; /**< ID of the map to the east.  */
+	uint16_t map_s; /**< ID of the map to the south. */
+	uint16_t map_w; /**< ID of the map to the west.  */
+
+	uint16_t maze_flag_1; /**< First set of map flags.  */
+	uint16_t maze_flag_2; /**< Second set of map flags. */
+
+	uint8_t wall_types  [16]; /**< 16 byte array of wall types, used for indirect lookup.   */
+	uint8_t floor_types [16]; /**< 16 byte array of surface types used for indirect lookup. */
+
+	uint8_t wall_type;    /**< The type of walls, used in a lookup table.                     */
+	uint8_t floor_type;   /**< The default floor type (lookup table, used by indoor maps).    */
+	uint8_t run_chance;   /**< Difficulty of running from a fight.                            */
+	uint8_t run_x;        /**< X coordinate party will land at if they run from a fight.      */
+	uint8_t run_y;        /**< Y coordinate party will land at if they run from a fight.      */
+	uint8_t wall_no_pass; /**< Wall values greater than or equal cannot be walked through.    */
+	uint8_t surf_no_pass; /**< Surface values greater than or equal cannot be walked through. */
+	uint8_t unlock_door;  /**< Difficulty of unlocking a door on this map.                    */
+	uint8_t unlock_box;   /**< Difficulty of unlocking a chest on this map.                   */
+	uint8_t bash_door;    /**< Difficulty of bashing through a door.                          */
+	uint8_t bash_grate;   /**< Difficulty of bashing through a grate.                         */
+	uint8_t bash_wall;    /**< Difficulty of bashing through a wall.                          */
+	uint8_t trap_dmg;     /**< Level of damage the party will receive from traps on this map. */
+	uint8_t tavern_tips;  /**< Lookup table for the text file used by the tavern, if any.     */
+
+	uint32_t seen;    /**< 16 x 16 bit array indicating which tiles have been "seen".       */
+	uint32_t stepped; /**< 16 x 16 bit array indicating which tiles have been "stepped on". */
+} XeenOutdoorMap;
+
+/** Size of map (hard-coded). */
 extern int xeen_map_size[XEEN_COORDS];
 
 /** Read sprite information form a DAT file.
@@ -131,7 +114,24 @@ extern int xeen_map_size[XEEN_COORDS];
  */
 int xeen_read_sprite_info(FILE *fp, long o, int i, XeenSpriteFrameInfo *info);
 
-int xeen_read_outdoor_map(FILE *fp, long o, XeenOutdoorMap *map);
+/** Read a map from from DAT file.
+ *
+ *  @param fp  File pointer.
+ *  @param map  Pointer where to store the map.
+ *
+ *  @return  Error code:
+ *             - 0: Success
+ *             - 1: Invalid arguments
+ *             - 2: File read fail
+ *             - 3: Memory allocation fail
+ *
+ *  @pre The pointers must be valid.
+ *  @pre The contents of the map pointer must be empty.
+ *
+ *  @post On success the map will be valid.
+ *
+ */
+int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map);
 
 #endif /* XEEN_DAT_TOOL_H */
 
