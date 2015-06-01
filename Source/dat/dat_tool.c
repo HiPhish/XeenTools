@@ -61,7 +61,7 @@ end:
 	return error;
 }
 
-int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map) {
+int xeen_read_outdoor_map(FILE *fp, XeenMap *map) {
 	enum {
 		SUCCESS,
 		INVALID_ARGS,
@@ -78,7 +78,7 @@ int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map) {
 		goto end;
 	}
 
-	XeenOutdoorTile *tile = NULL;
+	XeenMapTile *tile = NULL;
 
 	/* Jump to position */
 	if (fseek(fp, 0, SEEK_SET) != 0) {
@@ -105,18 +105,17 @@ int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map) {
 			int j = 2 * y * XEEN_MAP_HEIGHT + 2 * x; /* Index into the bytes. */
 
 			/* Wall data */
-			tile[i].ground  = bytes[j + 0] & 0x0F; /* Low  nibble of low  byte. */
-			tile[i].middle  = bytes[j + 0] & 0xF0; /* High nibble of low  byte. */
-			tile[i].top     = bytes[j + 1] & 0x0F; /* Low  nibble of high byte. */
-			tile[i].overlay = bytes[j + 1] & 0xF0; /* High nibble of high byte. */
-			assert((tile[i]).ground < 16);
+			tile[i].field[0] = bytes[j + 0] & 0x0F; /* Low  nibble of low  byte. */
+			tile[i].field[1] = bytes[j + 0] & 0xF0; /* High nibble of low  byte. */
+			tile[i].field[2] = bytes[j + 1] & 0x0F; /* Low  nibble of high byte. */
+			tile[i].field[3] = bytes[j + 1] & 0xF0; /* High nibble of high byte. */
 
 			/* Flags */
 			tile[i].flags = bytes[2 * TILES + i];
 		}
 	}
 
-	*map = (XeenOutdoorMap) {
+	*map = (XeenMap) {
 		.tile = tile,
 
 		/* Skip two bytes because they possibly incorrect and not needed */
@@ -131,41 +130,25 @@ int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map) {
 		.maze_flag_2 = ((uint16_t)bytes[OFF(9)] << 8) + (uint16_t)bytes[OFF(8)],
 
 		.wall_types = {
-			[ 0] = bytes[OFF(10) +  0],
-			[ 1] = bytes[OFF(10) +  1],
-			[ 2] = bytes[OFF(10) +  2],
-			[ 3] = bytes[OFF(10) +  3],
-			[ 4] = bytes[OFF(10) +  4],
-			[ 5] = bytes[OFF(10) +  5],
-			[ 6] = bytes[OFF(10) +  6],
-			[ 7] = bytes[OFF(10) +  7],
-			[ 8] = bytes[OFF(10) +  8],
-			[ 9] = bytes[OFF(10) +  9],
-			[10] = bytes[OFF(10) + 10],
-			[11] = bytes[OFF(10) + 11],
-			[12] = bytes[OFF(10) + 12],
-			[13] = bytes[OFF(10) + 13],
-			[14] = bytes[OFF(10) + 14],
-			[15] = bytes[OFF(10) + 15],
+			[ 0] = bytes[OFF(10) +  0], [ 1] = bytes[OFF(10) +  1],
+			[ 2] = bytes[OFF(10) +  2], [ 3] = bytes[OFF(10) +  3],
+			[ 4] = bytes[OFF(10) +  4], [ 5] = bytes[OFF(10) +  5],
+			[ 6] = bytes[OFF(10) +  6], [ 7] = bytes[OFF(10) +  7],
+			[ 8] = bytes[OFF(10) +  8], [ 9] = bytes[OFF(10) +  9],
+			[10] = bytes[OFF(10) + 10], [11] = bytes[OFF(10) + 11],
+			[12] = bytes[OFF(10) + 12], [13] = bytes[OFF(10) + 13],
+			[14] = bytes[OFF(10) + 14], [15] = bytes[OFF(10) + 15],
 		},
 
 		.floor_types = {
-			[ 0] = bytes[OFF(26) +  0],
-			[ 1] = bytes[OFF(26) +  1],
-			[ 2] = bytes[OFF(26) +  2],
-			[ 3] = bytes[OFF(26) +  3],
-			[ 4] = bytes[OFF(26) +  4],
-			[ 5] = bytes[OFF(26) +  5],
-			[ 6] = bytes[OFF(26) +  6],
-			[ 7] = bytes[OFF(26) +  7],
-			[ 8] = bytes[OFF(26) +  8],
-			[ 9] = bytes[OFF(26) +  9],
-			[10] = bytes[OFF(26) + 10],
-			[11] = bytes[OFF(26) + 11],
-			[12] = bytes[OFF(26) + 12],
-			[13] = bytes[OFF(26) + 13],
-			[14] = bytes[OFF(26) + 14],
-			[15] = bytes[OFF(26) + 15],
+			[ 0] = bytes[OFF(26) +  0], [ 1] = bytes[OFF(26) +  1],
+			[ 2] = bytes[OFF(26) +  2], [ 3] = bytes[OFF(26) +  3],
+			[ 4] = bytes[OFF(26) +  4], [ 5] = bytes[OFF(26) +  5],
+			[ 6] = bytes[OFF(26) +  6], [ 7] = bytes[OFF(26) +  7],
+			[ 8] = bytes[OFF(26) +  8], [ 9] = bytes[OFF(26) +  9],
+			[10] = bytes[OFF(26) + 10], [11] = bytes[OFF(26) + 11],
+			[12] = bytes[OFF(26) + 12], [13] = bytes[OFF(26) + 13],
+			[14] = bytes[OFF(26) + 14], [15] = bytes[OFF(26) + 15],
 		},
 
 		.floor_type   = bytes[OFF(42)],

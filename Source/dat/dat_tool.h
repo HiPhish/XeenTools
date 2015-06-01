@@ -41,27 +41,33 @@ typedef struct xeen_sprite_frame_info {
 	uint8_t last  [XEEN_SPRITE_DIRECTIONS]; /**< Last frame.                   */
 } XeenSpriteFrameInfo;
 
-/** Structure of an indoor map tile. */
-typedef struct xeen_indoor_tile {
-	uint8_t wall_n; /**< Wall to the north. */
-	uint8_t wall_e; /**< Wall to the east.  */
-	uint8_t wall_s; /**< Wall to the south. */
-	uint8_t wall_w; /**< Wall to the west.  */
-	uint8_t flags;  /**< Tile flags.        */
-} XeenIndoorTile;
-
-/** Structure of an outdoor map tile. */
-typedef struct xeen_outdoor_tile {
-	uint8_t ground;   /***< Ground layer.  */
-	uint8_t middle;   /***< Middle layer.  */
-	uint8_t top;      /***< Top layer.     */
-	uint8_t overlay;  /***< Overlay layer. */
-	uint8_t flags;    /***< Tile flags.    */
-} XeenOutdoorTile;
+/** Structure of a map file.
+ *
+ *  The four fields have different meaning depending on whether it is an
+ *  outdoor- or indoor tile. For outdoor they are the terrain features of the
+ *  map stacked on top of other, for indoor they are the walls surrounding the
+ *  tile.
+ *
+ *  +--------+---------+--------+
+ *  | Number | Outdoor | Indoor |
+ *  +========+=========+========+
+ *  |      0 | Base    | North  |
+ *  +--------+---------+--------+
+ *  |      1 | Middle  | East   |
+ *  +--------+---------+--------+
+ *  |      2 | Top     | South  |
+ *  +--------+---------+--------+
+ *  |      3 | Overlay | West   |
+ *  +--------+---------+--------+
+ */
+typedef struct xeen_map_tile {
+	uint8_t field [4]; /***< Tiles or walls. */
+	uint8_t flags    ; /***< Tile flags.     */
+} XeenMapTile;
 
 /** Structure of an indoor map. */
-typedef struct xeen_outdoor_map {
-	XeenOutdoorTile *tile; /**< Sequence of tiles, row-major. */
+typedef struct xeen_map {
+	XeenMapTile *tile; /**< Sequence of tiles, row-major. */
 
 	uint16_t map_n; /**< ID of the map to the north. */
 	uint16_t map_e; /**< ID of the map to the east.  */
@@ -91,7 +97,7 @@ typedef struct xeen_outdoor_map {
 
 	uint32_t seen;    /**< 16 x 16 bit array indicating which tiles have been "seen".       */
 	uint32_t stepped; /**< 16 x 16 bit array indicating which tiles have been "stepped on". */
-} XeenOutdoorMap;
+} XeenMap;
 
 /** Size of map (hard-coded). */
 extern int xeen_map_size[XEEN_COORDS];
@@ -131,7 +137,7 @@ int xeen_read_sprite_info(FILE *fp, long o, int i, XeenSpriteFrameInfo *info);
  *  @post On success the map will be valid.
  *
  */
-int xeen_read_outdoor_map(FILE *fp, XeenOutdoorMap *map);
+int xeen_read_map(FILE *fp, XeenMap *map);
 
 #endif /* XEEN_DAT_TOOL_H */
 

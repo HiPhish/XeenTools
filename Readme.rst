@@ -52,7 +52,7 @@ So far the following file formats are supported:
 - [o] CC files, containers that hold other files
 - [o] CFG configurations for DOS
 - [o] CHR
-- [o] DAT sprite info files for objects
+- [o] DAT sprite info files for objects or maps
 - [o] Environment sets
 - [o] Copy-protection files
 - [o] FAC
