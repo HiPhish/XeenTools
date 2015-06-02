@@ -127,3 +127,4 @@ int xeen_read_outdoor_map(FILE *fp, XeenMap *map) {
 end:
 	return error;
 }
+
