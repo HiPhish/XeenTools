@@ -62,7 +62,8 @@ So far the following file formats are supported:
 - [ ] M
 - [ ] MOB
 - [o] MON sprite files for idle frames
-- [ ] OBJ
+- [o] OBJ sprite file (these are just regular sprite files, so there is nothing
+  specific to them)
 - [o] PAL palette files
 - [ ] PTY
 - [o] RAW image files
