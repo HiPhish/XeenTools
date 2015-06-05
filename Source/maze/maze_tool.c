@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include "maze_tool.h"
 
-#define XEEN_MAP_WIDTH   16
-#define XEEN_MAP_HEIGHT  16
+#define XEEN_MAZE_WIDTH   16
+#define XEEN_MAZE_HEIGHT  16
 
-int xeen_map_size[XEEN_COORDS] = {
-	[XEEN_X] = XEEN_MAP_WIDTH,
-	[XEEN_Y] = XEEN_MAP_HEIGHT,
+int xeen_maze_size[XEEN_COORDS] = {
+	[XEEN_X] = XEEN_MAZE_WIDTH,
+	[XEEN_Y] = XEEN_MAZE_HEIGHT,
 };
 
-int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
-	#define TILES  (XEEN_MAP_WIDTH * XEEN_MAP_HEIGHT)
+int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
+	#define TILES  (XEEN_MAZE_WIDTH * XEEN_MAZE_HEIGHT)
 
 	enum {
 		SUCCESS,
@@ -20,7 +20,7 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 		MALLOC_FAIL,
 	} error = SUCCESS;
 
-	XeenMapTile *tile = NULL;
+	XeenMazeTile *tile = NULL;
 
 	/* Variables */
 	uint8_t object_list  [16];
@@ -36,10 +36,10 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 	uint8_t (*mob_decor  )[4] = NULL;
 
 	/* Pre-conditions */
-	if (!dat || !mob || !map) {
+	if (!dat || !mob || !maze) {
 		error = INVALID_ARGS;
 		goto fail;
-	} else if (map->tile) {
+	} else if (maze->tile) {
 		error = INVALID_ARGS;
 		goto fail;
 	}
@@ -68,10 +68,10 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 	}
 
 	/* Assign the tile data itself */
-	for (int y = 0; y < XEEN_MAP_HEIGHT; ++y) {
-		for (int x = 0; x < XEEN_MAP_WIDTH; ++x) {
-			int i = 1 * y * XEEN_MAP_HEIGHT + 1 * x; /* Index of the tile.    */
-			int j = 2 * y * XEEN_MAP_HEIGHT + 2 * x; /* Index into the bytes. */
+	for (int y = 0; y < XEEN_MAZE_HEIGHT; ++y) {
+		for (int x = 0; x < XEEN_MAZE_WIDTH; ++x) {
+			int i = 1 * y * XEEN_MAZE_HEIGHT + 1 * x; /* Index of the tile.    */
+			int j = 2 * y * XEEN_MAZE_HEIGHT + 2 * x; /* Index into the bytes. */
 
 			/* Wall data */
 			tile[i].layer[0] = dat_bytes[j + 0] & 0x0F; /* Low  nibble of low  byte. */
@@ -91,10 +91,10 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 		int b =              0; /* Current bit  */
 		uint8_t mask = 0x01;
 
-		for (int y = 0; y < XEEN_MAP_HEIGHT; ++y) {
-			for (int x = 0; x < XEEN_MAP_WIDTH; ++x) {
+		for (int y = 0; y < XEEN_MAZE_HEIGHT; ++y) {
+			for (int x = 0; x < XEEN_MAZE_WIDTH; ++x) {
 				/* Current tile */
-				int t = 1 * y * XEEN_MAP_HEIGHT + 1 * x;
+				int t = 1 * y * XEEN_MAZE_HEIGHT + 1 * x;
 
 				/* If we have read eight bits */
 				if (b == 8) {
@@ -160,19 +160,19 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 	for (int i = 0; i < mob_objects; ++i) {
 		int x = mob_object[i][0];
 		int y = mob_object[i][1];
-		tile[y * XEEN_MAP_WIDTH + x].object.id  = mob_object[i][2];
-		tile[y * XEEN_MAP_WIDTH + x].object.dir = mob_object[i][3];
+		tile[y * XEEN_MAZE_WIDTH + x].object.id  = mob_object[i][2];
+		tile[y * XEEN_MAZE_WIDTH + x].object.dir = mob_object[i][3];
 	}
 	for (int i = 0; i < mob_monsters; ++i) {
 		int x = mob_monster[i][0];
 		int y = mob_monster[i][1];
-		tile[y * XEEN_MAP_WIDTH + x].monster.id  = mob_monster[i][2];
-		tile[y * XEEN_MAP_WIDTH + x].monster.dir = mob_monster[i][3];
+		tile[y * XEEN_MAZE_WIDTH + x].monster.id  = mob_monster[i][2];
+		tile[y * XEEN_MAZE_WIDTH + x].monster.dir = mob_monster[i][3];
 	}
 	for (int i = 0; i < mob_decors; ++i) {
 		int x = mob_decor[i][0];
 		int y = mob_decor[i][1];
-		tile[y * XEEN_MAP_WIDTH + x].decor  = mob_decor[i][2];
+		tile[y * XEEN_MAZE_WIDTH + x].decor  = mob_decor[i][2];
 	}
 
 	if ( mob_object  ) {free( mob_object  );}
@@ -181,16 +181,16 @@ int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map) {
 
 	/*----- Assigning data -----*/
 
-	*map = (XeenMap) {
+	*maze = (XeenMaze) {
 		.tile = tile,
 
 		/* Skip two bytes because they possibly incorrect and not needed */
 
 		#define OFF(n)  (3 * TILES + n) /* (3*TILES) = bytes we have already read */
-		.map_n = dat_bytes[OFF(2)],
-		.map_e = dat_bytes[OFF(3)],
-		.map_s = dat_bytes[OFF(4)],
-		.map_w = dat_bytes[OFF(5)],
+		.maze_n = dat_bytes[OFF(2)],
+		.maze_e = dat_bytes[OFF(3)],
+		.maze_s = dat_bytes[OFF(4)],
+		.maze_w = dat_bytes[OFF(5)],
 
 		.maze_flag_1 = ((uint16_t)dat_bytes[OFF(7)] << 8) + (uint16_t)dat_bytes[OFF(6)],
 		.maze_flag_2 = ((uint16_t)dat_bytes[OFF(9)] << 8) + (uint16_t)dat_bytes[OFF(8)],
