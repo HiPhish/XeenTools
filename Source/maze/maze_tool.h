@@ -5,8 +5,22 @@
  *
  *  Interface for maze DAT files.
  *
- *  The "MAZExxxx.DAT" files that store map layout for indoor- and outdoor
- *  maps.
+ *  The "MAZExxxx.DAT" files that store maze layout for indoor- and outdoor
+ *  mazes. The "MAZExxxx.MOB" file stores the objects, monsters and wall decors
+ *  of the maze.
+ *
+ *  A "maze" is what is usually referred to as a map and the size of every maze
+ *  is hard-coded to 16 x 16 tiles. If a maze is larger than that it means that
+ *  it is actually made of several mazes stitched together. That's why every
+ *  maze stores the IDs of up to four adjacent mazes.
+ *
+ *  The name of a maze file pair (DAT and MOB) is "MAZExxxx" where "xxxx" is
+ *  the ID of the maze. If the ID is less than 100 the two leading characters
+ *  are 0s. On the other hand, if the ID is greater than 99 the leading
+ *  character is the letter "X".
+ *
+ *  The DAT and MOB files have no graphic informations, you have to load the
+ *  corresponding sprite files yourself.
  */
 
 #include <stdint.h>
@@ -16,7 +30,7 @@
 
 /** Structure of a maze tile.
  *
- *  The four fields have different meaning depending on whether it is an
+ *  The four layers have different meaning depending on whether it is an
  *  outdoor- or indoor tile. For outdoor they are the terrain features of the
  *  maze stacked on top of other, for indoor they are the walls surrounding the
  *  tile.
@@ -32,31 +46,34 @@
  *  +--------+---------+--------+
  *  |      3 | Overlay | West   |
  *  +--------+---------+--------+
+ *
+ *  The object, monster and decor are indices into the maze's corresponding
+ *  arrays. The numbers have no meaning on their own.
  */
 typedef struct xeen_maze_tile {
-	/* From DAT file */
-	uint8_t layer[4]; /***< Tiles or walls. */
+	/* --From DAT file-- */
 
-	/**< Object on the tile. */
+	uint8_t layer[4] ; /**< Tiles or walls.             */
+	uint8_t flags    ; /**< Tile flags.                 */
+	uint8_t seen     ; /**< Tile has been "seen".       */
+	uint8_t stepped  ; /**< Tile has been "stepped on". */
+
+	/* --From MOB file-- */
+
+	/** Object on the tile. */
 	struct {
-		uint8_t id;
-		uint8_t dir;
+		uint8_t id;  /**< Index into the object array.    */
+		uint8_t dir; /**< Direction the object is facing. */
 	} object;
 
-	/**< Monster on the tile. */
+	/** Monster on the tile. */
 	struct {
-		uint8_t id;
-		uint8_t dir;
+		uint8_t id;  /**< Index into the monster array.    */
+		uint8_t dir; /**< Direction the monster is facing. */
 	} monster;
 
-	uint8_t decor; /**< Ornament on the wall. */
-
-	uint8_t flags; /***< Tile flags.     */
-
-	uint8_t seen;    /**< Tile has been "seen".       */
-	uint8_t stepped; /**< Tile has been "stepped on". */
-
-	/* From MOB file */
+	/** Ornament on the wall. */
+	uint8_t decor; /**< Index into the decor array. */
 } XeenMazeTile;
 
 /** Structure of an indoor maze. */
@@ -98,9 +115,10 @@ typedef struct xeen_maze {
 /** Size of maze (hard-coded). */
 extern int xeen_maze_size[XEEN_COORDS];
 
-/** Read a maze from from DAT file.
+/** Read a maze from from DAT and MOB file.
  *
- *  @param fp  File pointer.
+ *  @param dat   File pointer to MAZExxxx.DAT.
+ *  @param mob   File pointer to MAZExxxx.MOB.
  *  @param maze  Pointer where to store the maze.
  *
  *  @return  Error code:
@@ -113,7 +131,6 @@ extern int xeen_maze_size[XEEN_COORDS];
  *  @pre The contents of the maze pointer must be empty.
  *
  *  @post On success the maze will be valid.
- *
  */
 int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze);
 

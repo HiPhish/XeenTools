@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include "maze_tool.h"
 
-#define XEEN_MAZE_WIDTH   16
-#define XEEN_MAZE_HEIGHT  16
+#define MAZE_WIDTH   16
+#define MAZE_HEIGHT  16
 
 int xeen_maze_size[XEEN_COORDS] = {
-	[XEEN_X] = XEEN_MAZE_WIDTH,
-	[XEEN_Y] = XEEN_MAZE_HEIGHT,
+	[XEEN_X] = MAZE_WIDTH,
+	[XEEN_Y] = MAZE_HEIGHT,
 };
 
 int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
-	#define TILES  (XEEN_MAZE_WIDTH * XEEN_MAZE_HEIGHT)
+	#define TILES  (MAZE_WIDTH * MAZE_HEIGHT)
 
 	enum {
 		SUCCESS,
@@ -25,7 +25,7 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 	/* Variables */
 	uint8_t object_list  [16];
 	uint8_t monster_list [16];
-	uint8_t decor_list    [16];
+	uint8_t decor_list   [16];
 
 	int mob_objects  = 0;
 	int mob_monsters = 0;
@@ -59,19 +59,20 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 		goto fail;
 	}
 
-	uint8_t dat_bytes[3 * TILES + 64];
+	/* Raw bytes from the DAT file. */
+	uint8_t dat_bytes[3 * TILES + 124];
 
 	/* Read the DAT bytes into the array. */
-	if (fread(dat_bytes, sizeof(uint8_t), 3 * TILES, dat) != 3 * TILES * sizeof(uint8_t)) {
+	if (fread(dat_bytes, sizeof(dat_bytes[0]), 3 * TILES, dat) != sizeof(dat_bytes)) {
 		error = FREAD_FAIL;
 		goto fail;
 	}
 
 	/* Assign the tile data itself */
-	for (int y = 0; y < XEEN_MAZE_HEIGHT; ++y) {
-		for (int x = 0; x < XEEN_MAZE_WIDTH; ++x) {
-			int i = 1 * y * XEEN_MAZE_HEIGHT + 1 * x; /* Index of the tile.    */
-			int j = 2 * y * XEEN_MAZE_HEIGHT + 2 * x; /* Index into the bytes. */
+	for (int y = 0; y < MAZE_HEIGHT; ++y) {
+		for (int x = 0; x < MAZE_WIDTH; ++x) {
+			int i = 1 * y * MAZE_HEIGHT + 1 * x; /* Index of the tile.    */
+			int j = 2 * y * MAZE_HEIGHT + 2 * x; /* Index into the bytes. */
 
 			/* Wall data */
 			tile[i].layer[0] = dat_bytes[j + 0] & 0x0F; /* Low  nibble of low  byte. */
@@ -91,10 +92,10 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 		int b =              0; /* Current bit  */
 		uint8_t mask = 0x01;
 
-		for (int y = 0; y < XEEN_MAZE_HEIGHT; ++y) {
-			for (int x = 0; x < XEEN_MAZE_WIDTH; ++x) {
+		for (int y = 0; y < MAZE_HEIGHT; ++y) {
+			for (int x = 0; x < MAZE_WIDTH; ++x) {
 				/* Current tile */
-				int t = 1 * y * XEEN_MAZE_HEIGHT + 1 * x;
+				int t = 1 * y * MAZE_HEIGHT + 1 * x;
 
 				/* If we have read eight bits */
 				if (b == 8) {
@@ -115,7 +116,7 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 	/*----- MOB file -----*/
 
 	#define READ_LIST(list) \
-		if (fread(list, sizeof(uint8_t), 16, mob) != 16 * sizeof(uint8_t)) { \
+		if (fread(list, sizeof(list[0]), 16, mob) != sizeof(list)) { \
 			error = FREAD_FAIL; \
 			goto fail; \
 		}
@@ -128,7 +129,7 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 	uint8_t mob_bytes[4] = {0x00, 0x00, 0x00, 0x00};
 	#define COUNT_ITEMS(kind, count) \
 		do { \
-			if (fread(mob_bytes, sizeof(uint8_t), 4, mob) != 4 * sizeof(uint8_t)) { \
+			if (fread(mob_bytes, sizeof(mob_bytes[0]), 4, mob) != sizeof(mob_bytes)) { \
 				error = FREAD_FAIL; \
 				goto fail; \
 			} \
@@ -142,7 +143,7 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 			error = MALLOC_FAIL; \
 			goto fail; \
 		} \
-		if (fread(kind, sizeof(uint8_t), count, mob) != count * sizeof(uint8_t)) { \
+		if (fread(kind, sizeof(*kind), count, mob) != count * sizeof(*kind)) { \
 			error = FREAD_FAIL; \
 			goto fail; \
 		} \
@@ -153,31 +154,31 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 		}
 	COUNT_ITEMS( mob_object , mob_objects  )
 	COUNT_ITEMS( mob_monster, mob_monsters )
-	COUNT_ITEMS( mob_decor  , mob_decors    )
+	COUNT_ITEMS( mob_decor  , mob_decors   )
 	#undef COUNT_ITEMS
+	assert(mob_object && mob_monster && mob_decor);
 
 	/* Place data from MOB file into the tiles */
 	for (int i = 0; i < mob_objects; ++i) {
 		int x = mob_object[i][0];
 		int y = mob_object[i][1];
-		tile[y * XEEN_MAZE_WIDTH + x].object.id  = mob_object[i][2];
-		tile[y * XEEN_MAZE_WIDTH + x].object.dir = mob_object[i][3];
+		tile[y * MAZE_WIDTH + x].object.id  = mob_object[i][2];
+		tile[y * MAZE_WIDTH + x].object.dir = mob_object[i][3];
 	}
 	for (int i = 0; i < mob_monsters; ++i) {
 		int x = mob_monster[i][0];
 		int y = mob_monster[i][1];
-		tile[y * XEEN_MAZE_WIDTH + x].monster.id  = mob_monster[i][2];
-		tile[y * XEEN_MAZE_WIDTH + x].monster.dir = mob_monster[i][3];
+		tile[y * MAZE_WIDTH + x].monster.id  = mob_monster[i][2];
+		tile[y * MAZE_WIDTH + x].monster.dir = mob_monster[i][3];
 	}
 	for (int i = 0; i < mob_decors; ++i) {
 		int x = mob_decor[i][0];
 		int y = mob_decor[i][1];
-		tile[y * XEEN_MAZE_WIDTH + x].decor  = mob_decor[i][2];
+		tile[y * MAZE_WIDTH + x].decor = mob_decor[i][2];
 	}
 
-	if ( mob_object  ) {free( mob_object  );}
-	if ( mob_monster ) {free( mob_monster );}
-	if ( mob_decor   ) {free( mob_decor   );}
+	free(mob_object); free(mob_monster); free(mob_decor);
+	assert(!mob_object && !mob_monster && !mob_decor);
 
 	/*----- Assigning data -----*/
 
