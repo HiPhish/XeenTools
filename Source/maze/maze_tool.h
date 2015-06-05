@@ -34,8 +34,29 @@
  *  +--------+---------+--------+
  */
 typedef struct xeen_map_tile {
-	uint8_t field [4]; /***< Tiles or walls. */
-	uint8_t flags    ; /***< Tile flags.     */
+	/* From DAT file */
+	uint8_t layer[4]; /***< Tiles or walls. */
+
+	/**< Object on the tile. */
+	struct {
+		uint8_t id;
+		uint8_t dir;
+	} object;
+
+	/**< Monster on the tile. */
+	struct {
+		uint8_t id;
+		uint8_t dir;
+	} monster;
+
+	uint8_t decor; /**< Ornament on the wall. */
+
+	uint8_t flags; /***< Tile flags.     */
+
+	uint8_t seen;    /**< Tile has been "seen".       */
+	uint8_t stepped; /**< Tile has been "stepped on". */
+
+	/* From MOB file */
 } XeenMapTile;
 
 /** Structure of an indoor map. */
@@ -68,9 +89,30 @@ typedef struct xeen_map {
 	uint8_t trap_dmg;     /**< Level of damage the party will receive from traps on this map. */
 	uint8_t tavern_tips;  /**< Lookup table for the text file used by the tavern, if any.     */
 
-	uint32_t seen;    /**< 16 x 16 bit array indicating which tiles have been "seen".       */
-	uint32_t stepped; /**< 16 x 16 bit array indicating which tiles have been "stepped on". */
+	/* From the MOB file */
+	uint8_t object_list  [16]; /** Array ob object sprite IDs to place on this map. */
+	uint8_t monster_list [16]; /** Array of monster IDs to place on this map.       */
+	uint8_t wall_list    [16]; /** Array of wall sprite IDs to place on this map.   */
 } XeenMap;
+
+/** Structure of Xeen map objects. */
+typedef struct xeen_map_objects {
+	
+	uint8_t object_list  [16];
+	/** Array of monster IDs to place on this map. */
+	uint8_t monster_list [16];
+	/** Array of wall sprite IDs to place on this map. */
+	uint8_t wall_list    [16];
+
+	
+	int objects  ; /**< Number of object types.  */
+	int monsters ; /**< Number of monster types. */
+	int walls    ; /**< Number of wall types.    */
+
+	uint8_t (*object )[4]; /**< List of lookup IDs of objects.  */
+	uint8_t (*monster)[4]; /**< List of lookup IDs of monsters. */
+	uint8_t (*wall   )[4]; /**< List of lookup IDs of walls.    */
+} XeenMapObjects;
 
 /** Size of map (hard-coded). */
 extern int xeen_map_size[XEEN_COORDS];
@@ -92,6 +134,7 @@ extern int xeen_map_size[XEEN_COORDS];
  *  @post On success the map will be valid.
  *
  */
-int xeen_read_map(FILE *fp, XeenMap *map);
+int xeen_read_map(FILE *dat, FILE *mob, XeenMap *map);
 
 #endif /* XEEN_MAZE_TOOL_H */
+
