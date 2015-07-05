@@ -60,10 +60,10 @@ So far the following file formats are supported:
 - [o] FWL
 - [o] GND ground sprits
 - [ ] M
-- [ ] MOB
+- [o] MAZExxxx.DAT & MAZExxxx.MOB maps in the game
 - [o] MON sprite files for idle frames
 - [o] OBJ sprite file (these are just regular sprite files, so there is nothing
-  specific to them)
+      specific to them)
 - [o] PAL palette files
 - [ ] PTY
 - [o] RAW image files
