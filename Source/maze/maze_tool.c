@@ -51,7 +51,7 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 	}
 
 
-	/*----- DAT file -----*/
+	/*---------- DAT file ----------*/
 
 	/* Rewind DAT file */
 	if (fseek(dat, 0, SEEK_SET) != 0) {
@@ -113,7 +113,8 @@ int xeen_read_maze(FILE *dat, FILE *mob, XeenMaze *maze) {
 		}
 	} while(0);
 
-	/*----- MOB file -----*/
+	
+	/*---------- MOB file ----------*/
 
 	#define READ_LIST(list) \
 		if (fread(list, sizeof(list[0]), 16, mob) != sizeof(list)) { \
