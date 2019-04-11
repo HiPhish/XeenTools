@@ -297,6 +297,7 @@ int atoh16(char *a, uint16_t *h) {
 		++chars;
 	}
 
+	*h = hex;
 end:
 	return error;
 }
